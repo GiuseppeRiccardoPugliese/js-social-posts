@@ -70,7 +70,7 @@ posts.forEach(element => {
             <div class="post__header">
                 <div class="post-meta">                    
                     <div class="post-meta__icon">
-                        <img class="profile-pic" src="${element.author.image}" alt="Phil Mangione">                    
+                        <img class="profile-pic" src="${element.author.image}" alt="${element.author.name}">                    
                     </div>
                     <div class="post-meta__data">
                         <div class="post-meta__author">${element.author.name}</div>
@@ -85,17 +85,60 @@ posts.forEach(element => {
             <div class="post__footer">
                 <div class="likes js-likes">
                     <div class="likes__cta">
-                        <a class="like-button  js-like-button" href="#" data-postid="1">
+                        <a class="like-button  js-like-button" href="#" data-postid="${element.id}">
                             <i class="like-button__icon fas fa-thumbs-up" aria-hidden="true"></i>
                             <span class="like-button__label">Mi Piace</span>
                         </a>
                     </div>
                     <div class="likes__counter">
-                        Piace a <b id="like-counter-1" class="js-likes-counter">${element.likes}</b> persone
+                        Piace a <b id="like-counter-${element.id}" class="js-likes-counter">${element.likes}</b> persone
                     </div>
                 </div> 
             </div>            
         </div>
-    `
+    `;
     contenitore.innerHTML += post;
+});
+
+//Milestone 2 - Se clicchiamo sul tasto “Mi Piace” cambiamo il colore al testo del bottone e incrementiamo il counter dei likes relativo. Salviamo in un secondo array gli id dei post ai quali abbiamo messo il like.
+
+// Array per salvare gli ID dei post con Mi Piace
+const likedPosts = [];
+
+// Aggiungo event listener per il click sul pulsante "Mi Piace"
+const likeButtons = document.querySelectorAll('.js-like-button');
+
+//Addo tutti i miei bottoni "mi piace"
+likeButtons.forEach(button => {
+
+    //Aggiungo la funzione al click
+    button.addEventListener("click",
+
+        function (event) {
+            //Non torna all'inizio quando metto like (tag a #)
+            event.preventDefault();
+
+            //Selezione degli elementi che mi danno id del post
+            const postId = button.getAttribute('data-postid');
+            const likeCounter = document.getElementById(`like-counter-${postId}`);
+
+            //SE il mio ID del post NON e' incluso nell'array allora lo aggiungo nell'array likedPosts
+            if (!likedPosts.includes(postId)) {
+
+                //Allora lo pusho nell'array
+                likedPosts.push(postId);
+                const likeButtonLabel = button.querySelector('.like-button__label');
+                const likeButtonIcon = button.querySelector(".like-button__icon");
+
+                //Cambio il colore al click
+                likeButtonLabel.classList.add("liked");
+                likeButtonIcon.classList.add("liked");
+
+                //Incremento il contatore dei like
+                let likes = likeCounter.textContent;
+                likes++;
+                likeCounter.textContent = likes;
+            }
+        }
+    )
 });
