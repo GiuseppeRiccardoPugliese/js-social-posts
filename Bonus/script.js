@@ -66,7 +66,7 @@ const contenitore = document.getElementById("container");
 
 posts.forEach(element => {
 
-    //Formato italiano per la data
+    //Formato italiano per la data BONUS 1
     const formattedDate = new Date(element.created).toLocaleDateString('it-IT');
 
     const post = `
@@ -126,13 +126,15 @@ likeButtons.forEach(button => {
             const postId = button.getAttribute('data-postid');
             const likeCounter = document.getElementById(`like-counter-${postId}`);
 
+            const likeButtonLabel = button.querySelector('.like-button__label');
+            const likeButtonIcon = button.querySelector(".like-button__icon");
+
+
             //SE il mio ID del post NON e' incluso nell'array allora lo aggiungo nell'array likedPosts
             if (!likedPosts.includes(postId)) {
 
                 //Allora lo pusho nell'array
                 likedPosts.push(postId);
-                const likeButtonLabel = button.querySelector('.like-button__label');
-                const likeButtonIcon = button.querySelector(".like-button__icon");
 
                 //Cambio il colore al click
                 likeButtonLabel.classList.add("liked");
@@ -142,7 +144,16 @@ likeButtons.forEach(button => {
                 let likes = likeCounter.textContent;
                 likes++;
                 likeCounter.textContent = likes;
+            } else if (likedPosts.includes(postId)) {//BONUS 2
+
+                likedPosts.pop(postId);
+                let likes = likeCounter.textContent;
+                likes--;
+                likeCounter.textContent = likes;
+                likeButtonLabel.classList.remove("liked");
+                likeButtonIcon.classList.remove("liked");
             }
+
         }
     )
 });
